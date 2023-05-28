@@ -1,0 +1,24 @@
+package ee.gulho.assignment.account.service.dto;
+
+import ee.gulho.assignment.account.entity.enums.TransactionDirection;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+
+import java.math.BigDecimal;
+import java.util.UUID;
+
+@Data
+@AllArgsConstructor
+public class TransactionCreateRequest {
+    @NotNull
+    private UUID accountId;
+    @Positive
+    private BigDecimal amount;
+    private String currency;
+    private TransactionDirection direction;
+    @NotEmpty
+    private String description;
+}
