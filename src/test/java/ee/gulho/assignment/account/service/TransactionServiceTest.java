@@ -32,7 +32,7 @@ class TransactionServiceTest {
     private static final BigDecimal AMOUNT = BigDecimal.TEN;
     private static final String CURRENCY = "USD";
     private static final TransactionDirection DIRECTION = TransactionDirection.IN;
-    private static final String DESCRIPTION = "Soem Mock description";
+    private static final String DESCRIPTION = "Some Mock description";
 
     @Mock
     private TransactionValidation validation;
