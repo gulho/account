@@ -5,12 +5,12 @@ import ee.gulho.assignment.account.entity.Balance;
 import ee.gulho.assignment.account.entity.Transaction;
 import ee.gulho.assignment.account.entity.enums.TransactionDirection;
 import ee.gulho.assignment.account.exception.AccountNotFoundException;
+import ee.gulho.assignment.account.exception.TransactionCreateError;
 import ee.gulho.assignment.account.mapper.BalanceRepository;
 import ee.gulho.assignment.account.mapper.TransactionRepository;
 import ee.gulho.assignment.account.service.dto.TransactionCreateRequest;
 import ee.gulho.assignment.account.utils.TransactionValidation;
 import lombok.RequiredArgsConstructor;
-import org.apache.ibatis.transaction.TransactionException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,16 +28,16 @@ public class TransactionService {
     private final MessageSendService sendService;
 
     @Transactional
-    public Transaction createController(TransactionCreateRequest request) {
-        var transactionId = UUID.randomUUID();
+    public Transaction createTransaction(TransactionCreateRequest request) {
+        UUID transactionId = UUID.randomUUID();
 
-        var account = accountService.getAccountById(request.getAccountId().toString());
-        var balance = getBalanceForTransactionCurrency(request,account);
+        Account account = accountService.getAccountById(request.getAccountId().toString());
+        Balance balance = getBalanceForTransactionCurrency(request, account);
         validator.validate(request, balance);
 
-        var newBalanceAmount = doTransaction(request, transactionId, account, balance);
+        BigDecimal newBalanceAmount = doTransaction(request, transactionId, account, balance);
 
-        var response = createResponse(request, transactionId, newBalanceAmount);
+        Transaction response = createResponse(request, transactionId, newBalanceAmount);
         sendService.sendTransaction(response);
 
         return response;
@@ -45,23 +45,12 @@ public class TransactionService {
 
     public Transaction getTransaction(String transactionId) {
         try {
-            var uid = UUID.fromString(transactionId);
-            return transactionRepository.getTransactionById(uid).orElseThrow();
-        } catch (Exception ex) {
+            UUID uid = UUID.fromString(transactionId);
+            return transactionRepository.getTransactionById(uid).orElseThrow(() ->
+                    new AccountNotFoundException("Transaction UUID is not found"));
+        } catch (IllegalArgumentException ex) {
             throw new AccountNotFoundException("Transaction UUID is incorrect");
         }
-    }
-
-    private static Transaction createResponse(TransactionCreateRequest transactionCreate, UUID transactionId, BigDecimal newBalanceAmount) {
-        return Transaction.builder()
-                .accountId(transactionCreate.getAccountId())
-                .transactionId(transactionId)
-                .amount(transactionCreate.getAmount())
-                .currency(transactionCreate.getCurrency())
-                .direction(transactionCreate.getDirection().toString())
-                .description(transactionCreate.getDescription())
-                .balanceAmount(newBalanceAmount)
-                .build();
     }
 
     private BigDecimal doTransaction(TransactionCreateRequest transactionCreate, UUID transactionId, Account account, Balance balance) {
@@ -74,8 +63,20 @@ public class TransactionService {
                 transactionCreate.getAmount(),
                 transactionCreate.getDirection().toString(),
                 transactionCreate.getDescription()
-                );
+        );
         return newBalance;
+    }
+
+    private Transaction createResponse(TransactionCreateRequest transactionCreate, UUID transactionId, BigDecimal newBalanceAmount) {
+        return Transaction.builder()
+                .accountId(transactionCreate.getAccountId())
+                .transactionId(transactionId)
+                .amount(transactionCreate.getAmount())
+                .currency(transactionCreate.getCurrency())
+                .direction(transactionCreate.getDirection().toString())
+                .description(transactionCreate.getDescription())
+                .balanceAmount(newBalanceAmount)
+                .build();
     }
 
     private BigDecimal calculateNewAmount(BigDecimal balanceAmount, BigDecimal transactionAmount, TransactionDirection direction) {
@@ -86,10 +87,11 @@ public class TransactionService {
         }
     }
 
-    private static Balance getBalanceForTransactionCurrency(TransactionCreateRequest request, Account account) {
-        return account.getBalances().stream()
+    private Balance getBalanceForTransactionCurrency(TransactionCreateRequest request, Account account) {
+        var optionalBalance = account.getBalances().stream()
                 .filter(balance -> balance.getCurrency().equals(request.getCurrency()))
-                .findFirst()
-                .orElseThrow(() -> new TransactionException("Account do not have balance for current currency"));
+                .findFirst();
+        return optionalBalance.orElseThrow(() ->
+                new TransactionCreateError("Account does not have a balance for the current currency"));
     }
 }

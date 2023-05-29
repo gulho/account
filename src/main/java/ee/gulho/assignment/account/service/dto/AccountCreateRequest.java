@@ -12,7 +12,7 @@ import java.util.UUID;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AccountCreateRequestDto {
+public class AccountCreateRequest {
 
     @NotNull
     private UUID customerId;

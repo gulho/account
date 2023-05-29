@@ -1,12 +1,10 @@
 package ee.gulho.assignment.account.controller;
 
 import ee.gulho.assignment.account.entity.Account;
-import ee.gulho.assignment.account.exception.AccountNotFoundException;
 import ee.gulho.assignment.account.service.AccountService;
-import ee.gulho.assignment.account.service.dto.AccountCreateRequestDto;
+import ee.gulho.assignment.account.service.dto.AccountCreateRequest;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,7 +16,7 @@ public class AccountController implements BaseController {
     private final AccountService service;
 
     @PostMapping
-    ResponseEntity<Account> createAccount(@Valid @RequestBody AccountCreateRequestDto request) {
+    ResponseEntity<Account> createAccount(@Valid @RequestBody AccountCreateRequest request) {
         return ResponseEntity
                 .ok(service.createAccount(request));
     }
@@ -27,13 +25,5 @@ public class AccountController implements BaseController {
     ResponseEntity<Account> getAccount(@PathVariable String id) {
         return ResponseEntity
                 .ok(service.getAccountById((id)));
-    }
-
-    @ResponseStatus(value = HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(AccountNotFoundException.class)
-    ResponseEntity<String> handleAccountNotFound(AccountNotFoundException ex) {
-        return ResponseEntity
-                .badRequest()
-                .body(ex.getMessage());
     }
 }

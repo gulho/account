@@ -4,7 +4,7 @@ import ee.gulho.assignment.account.entity.Account;
 import ee.gulho.assignment.account.exception.AccountNotFoundException;
 import ee.gulho.assignment.account.mapper.AccountMapper;
 import ee.gulho.assignment.account.mapper.BalanceRepository;
-import ee.gulho.assignment.account.service.dto.AccountCreateRequestDto;
+import ee.gulho.assignment.account.service.dto.AccountCreateRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,7 +24,7 @@ public class AccountService {
     private static final BigDecimal balanceCreatedAmount = BigDecimal.ZERO;
 
     @Transactional
-    public Account createAccount(AccountCreateRequestDto request) {
+    public Account createAccount(AccountCreateRequest request) {
         var uid = UUID.randomUUID();
         accountRepository.insertAccount(uid, request.getCustomerId());
         request.getCurrencies()

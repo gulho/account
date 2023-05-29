@@ -1,9 +1,7 @@
 package ee.gulho.assignment.account.mapper;
 
 import ee.gulho.assignment.account.entity.Transaction;
-import org.apache.ibatis.annotations.Insert;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.*;
 import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
@@ -19,5 +17,13 @@ public interface TransactionRepository {
     void createTransaction(UUID id, UUID accountId, String currency, BigDecimal amount, String direction, String description);
 
     @Select("select * from transaction where id = #{id}")
+    @Results(value = {
+            @Result(property = "accountId", column = "account_id"),
+            @Result(property = "transactionId", column = "id"),
+            @Result(property = "amount", column = "amount"),
+            @Result(property = "currency", column = "currency"),
+            @Result(property = "direction", column = "direction"),
+            @Result(property = "description", column = "description")
+    })
     Optional<Transaction> getTransactionById(UUID id);
 }

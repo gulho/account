@@ -29,7 +29,7 @@ public interface AccountMapper {
     })
     Optional<Account> getAccountById(UUID id);
 
-    @Select("select * from balance where account_id=#{account_id}")
+    @Select("select id, amount::numeric, currency, account_id from balance where account_id=#{account_id}")
     List<Balance> getAllBalancesByAccount();
 
     @Insert("insert into account (id, customer_id) values (#{id}, #{customerId})")

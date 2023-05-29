@@ -5,7 +5,7 @@ import ee.gulho.assignment.account.entity.Balance;
 import ee.gulho.assignment.account.exception.AccountNotFoundException;
 import ee.gulho.assignment.account.mapper.AccountMapper;
 import ee.gulho.assignment.account.mapper.BalanceRepository;
-import ee.gulho.assignment.account.service.dto.AccountCreateRequestDto;
+import ee.gulho.assignment.account.service.dto.AccountCreateRequest;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -40,7 +40,7 @@ class AccountServiceTest {
     @Test
     void createAccount_accountCreated() {
         var id = UUID.randomUUID();
-        var request = new AccountCreateRequestDto(id, country, List.of(eur,usd));
+        var request = new AccountCreateRequest(id, country, List.of(eur,usd));
         var account = new Account(UUID.randomUUID(), id, List.of(new Balance(1, BigDecimal.ZERO, "USD")));
         when(accountMapper.getAccountById(any()))
                 .thenReturn(Optional.of(account));
@@ -59,9 +59,9 @@ class AccountServiceTest {
         when(accountMapper.getAccountById(any()))
                 .thenReturn(Optional.of(account));
 
-        var gettedAccount = service.getAccountById(uid.toString());
+        var curAccount = service.getAccountById(uid.toString());
 
-        assertThat(gettedAccount)
+        assertThat(curAccount)
                 .isNotNull()
                 .isEqualTo(account);
     }

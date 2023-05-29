@@ -17,7 +17,7 @@ public class TransactionController implements BaseController {
 
     @PostMapping
     ResponseEntity<Transaction> createTransaction(@Valid @RequestBody TransactionCreateRequest transactionCreate) {
-        return ResponseEntity.ok(service.createController(transactionCreate));
+        return ResponseEntity.ok(service.createTransaction(transactionCreate));
     }
 
     @GetMapping("{transactionId}")
