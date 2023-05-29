@@ -21,7 +21,7 @@ public class AccountService {
     private final BalanceRepository balanceRepository;
     private final MessageSendService messageService;
 
-    private final BigDecimal balanceCreatedAmount = BigDecimal.ZERO;
+    private static final BigDecimal balanceCreatedAmount = BigDecimal.ZERO;
 
     @Transactional
     public Account createAccount(AccountCreateRequestDto request) {

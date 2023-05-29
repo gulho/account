@@ -1,11 +1,9 @@
 package ee.gulho.assignment.account.utils;
 
-import ee.gulho.assignment.account.entity.Account;
 import ee.gulho.assignment.account.entity.Balance;
 import ee.gulho.assignment.account.entity.enums.TransactionDirection;
 import ee.gulho.assignment.account.exception.TransactionCreateError;
 import ee.gulho.assignment.account.service.dto.TransactionCreateRequest;
-import org.apache.ibatis.transaction.TransactionException;
 import org.springframework.stereotype.Component;
 
 @Component

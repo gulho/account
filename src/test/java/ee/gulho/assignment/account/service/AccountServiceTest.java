@@ -10,7 +10,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.internal.matchers.Any;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.math.BigDecimal;
@@ -42,9 +41,9 @@ class AccountServiceTest {
     void createAccount_accountCreated() {
         var id = UUID.randomUUID();
         var request = new AccountCreateRequestDto(id, country, List.of(eur,usd));
-        var account = new Account(UUID.randomUUID(), id, List.of(new Balance(1L, BigDecimal.ZERO, "USD")));
+        var account = new Account(UUID.randomUUID(), id, List.of(new Balance(1, BigDecimal.ZERO, "USD")));
         when(accountMapper.getAccountById(any()))
-                .thenReturn(Optional.ofNullable(account));
+                .thenReturn(Optional.of(account));
 
         var createdAccount = service.createAccount(request);
 
@@ -56,9 +55,9 @@ class AccountServiceTest {
     @Test
     void getAccountById_accountGetOk() {
         var uid = UUID.randomUUID();
-        var account = new Account(uid, UUID.randomUUID(), List.of(new Balance(1L, BigDecimal.ZERO, "USD")));
+        var account = new Account(uid, UUID.randomUUID(), List.of(new Balance(1, BigDecimal.ZERO, "USD")));
         when(accountMapper.getAccountById(any()))
-                .thenReturn(Optional.ofNullable(account));
+                .thenReturn(Optional.of(account));
 
         var gettedAccount = service.getAccountById(uid.toString());
 

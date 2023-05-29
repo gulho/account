@@ -10,7 +10,6 @@ import java.util.List;
 
 @Configuration
 @Getter
-//@Setter
 @PropertySource("classpath:customConfiguration.yml")
 public class AppConfiguration {
 

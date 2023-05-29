@@ -4,23 +4,16 @@ import ee.gulho.assignment.account.entity.Account;
 import ee.gulho.assignment.account.exception.AccountNotFoundException;
 import ee.gulho.assignment.account.service.AccountService;
 import ee.gulho.assignment.account.service.dto.AccountCreateRequestDto;
-import ee.gulho.assignment.account.service.dto.AccountResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("account/")
 @RequiredArgsConstructor
-public class AccountController extends BaseController {
+public class AccountController implements BaseController {
 
     private final AccountService service;
 

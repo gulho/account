@@ -5,7 +5,6 @@ import jakarta.validation.Constraint;
 import jakarta.validation.Payload;
 
 import java.lang.annotation.*;
-import java.util.Calendar;
 
 @Documented
 @Constraint(validatedBy = AllowedCurrenciesValidator.class)
