@@ -8,9 +8,7 @@ create table account
 
 create table balance
 (
-    id         integer generated always as identity
-        constraint balance_pk
-            primary key,
+    id serial primary key,
     amount     money   not null,
     currency   varchar not null,
     account_id uuid    not null

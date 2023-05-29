@@ -3,7 +3,7 @@ package ee.gulho.assignment.account.service;
 import ee.gulho.assignment.account.entity.Account;
 import ee.gulho.assignment.account.entity.Balance;
 import ee.gulho.assignment.account.exception.AccountNotFoundException;
-import ee.gulho.assignment.account.mapper.AccountMapper;
+import ee.gulho.assignment.account.mapper.AccountRepository;
 import ee.gulho.assignment.account.mapper.BalanceRepository;
 import ee.gulho.assignment.account.service.dto.AccountCreateRequest;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class AccountServiceTest {
     private final String usd = "USD";
 
     @Mock
-    private AccountMapper accountMapper;
+    private AccountRepository accountRepository;
     @Mock
     private BalanceRepository balanceRepository;
     @Mock
@@ -42,7 +42,7 @@ class AccountServiceTest {
         var id = UUID.randomUUID();
         var request = new AccountCreateRequest(id, country, List.of(eur,usd));
         var account = new Account(UUID.randomUUID(), id, List.of(new Balance(1, BigDecimal.ZERO, "USD")));
-        when(accountMapper.getAccountById(any()))
+        when(accountRepository.getAccountById(any()))
                 .thenReturn(Optional.of(account));
 
         var createdAccount = service.createAccount(request);
@@ -56,7 +56,7 @@ class AccountServiceTest {
     void getAccountById_accountGetOk() {
         var uid = UUID.randomUUID();
         var account = new Account(uid, UUID.randomUUID(), List.of(new Balance(1, BigDecimal.ZERO, "USD")));
-        when(accountMapper.getAccountById(any()))
+        when(accountRepository.getAccountById(any()))
                 .thenReturn(Optional.of(account));
 
         var curAccount = service.getAccountById(uid.toString());
@@ -77,7 +77,7 @@ class AccountServiceTest {
     @Test
     void getAccountById_accountNotFound() {
         var uid = UUID.randomUUID();
-        when(accountMapper.getAccountById(uid)).thenReturn(Optional.empty());
+        when(accountRepository.getAccountById(uid)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.getAccountById(uid.toString()))
                 .isInstanceOf(AccountNotFoundException.class);

@@ -2,7 +2,7 @@ package ee.gulho.assignment.account.service;
 
 import ee.gulho.assignment.account.entity.Account;
 import ee.gulho.assignment.account.exception.AccountNotFoundException;
-import ee.gulho.assignment.account.mapper.AccountMapper;
+import ee.gulho.assignment.account.mapper.AccountRepository;
 import ee.gulho.assignment.account.mapper.BalanceRepository;
 import ee.gulho.assignment.account.service.dto.AccountCreateRequest;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final AccountMapper accountRepository;
+    private final AccountRepository accountRepository;
     private final BalanceRepository balanceRepository;
     private final MessageSendService messageService;
 

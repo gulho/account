@@ -11,7 +11,7 @@ import java.util.UUID;
 
 @Mapper
 @Repository
-public interface AccountMapper {
+public interface AccountRepository {
 
     @Select("select * from account")
     @Results(value = {
